@@ -3,6 +3,7 @@
 #
 
 from nltk.sentiment import vader
+from common import review_result
 
 sia = vader.SentimentIntensityAnalyzer()
 
@@ -31,6 +32,8 @@ with open(fileWithCompute, 'w') as wrFile :
     for review in negReviews :
         print('{:-<65} {:>8}'.format(review[:45].replace('\n','') + ' ', sia.polarity_scores(review)['compound']))
         wrFile.write('{:-<65} {:>8}\n'.format(review[:45].replace('\n','') + ' ', sia.polarity_scores(review)['compound']))
+
+    reviewResults = getSentimentAnalyzed(getVaderSentiment)
 
     print('===============:: End of Program ::==================')
     wrFile.write('===============:: End of Program ::==================\n')
