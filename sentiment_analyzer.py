@@ -3,7 +3,7 @@
 #
 
 from nltk.sentiment import vader
-from common import review_result
+from common import review_result as reviewer
 
 sia = vader.SentimentIntensityAnalyzer()
 
@@ -33,7 +33,30 @@ with open(fileWithCompute, 'w') as wrFile :
         print('{:-<65} {:>8}'.format(review[:45].replace('\n','') + ' ', sia.polarity_scores(review)['compound']))
         wrFile.write('{:-<65} {:>8}\n'.format(review[:45].replace('\n','') + ' ', sia.polarity_scores(review)['compound']))
 
-    reviewResults = getSentimentAnalyzed(getVaderSentiment)
-
-    print('===============:: End of Program ::==================')
     wrFile.write('===============:: End of Program ::==================\n')
+
+
+#reviewResults = reviewer.getSentimentAnalyzed(reviewer.getVaderSentiment,
+#                                              posReviews=posReviews, negReviews=negReviews)
+
+# reviewResults = reviewer.getSentimentAnalyzed(reviewer.getSuperNaiveSentiment,
+#                                               posReviews=posReviews, negReviews=negReviews)
+
+reviewResults = reviewer.getSentimentAnalyzed(reviewer.getNaiveSentiment,
+                                              posReviews=posReviews, negReviews=negReviews)
+
+print(reviewResults.keys())
+print('Length of positive reviews:{0}\nLength of negative reviews:{1}'
+      .format(len(reviewResults['positive_review_results']),
+                  len(reviewResults['negative_review_results'])))
+
+print('-'*55)
+posActPercentage = float(sum(x>0 for x in reviewResults['positive_review_results'])
+                         /len(reviewResults['positive_review_results']))*100
+
+negActPercentage = float(sum(x>0 for x in reviewResults['negative_review_results'])
+                         /len(reviewResults['negative_review_results']))*100
+
+print("Positive accuracy {:6.2f}%\nNegative accuracy {:6.2f}%"
+      .format(posActPercentage, negActPercentage))
+print('===============:: End of Program ::==================')
